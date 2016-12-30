@@ -7,20 +7,29 @@ const router = express.Router();
 router.get('/:id', (req, res) => {
 	User.findById(req.params.id, (err, user) => {
 		if(err) {
-			res.send(err);
+			res.status(404).send('No user Found');
 		} else {
-			res.json({
-				user: user
-			});
+			user.authToken = '';
+			res.json(user);
 		}
 	});
 });
 
-router.post('/', (req, res) => {
+router.post('/auth', (req, res) => {
 	let data = req.body;
 	User.findById(data._id, (err, user) => {
 		if(user) {
-			res.send(data);
+			for(var key in data) {
+				user[key] = data[key];
+			}
+			user.save((err, newUser) => {
+				if(err) {
+					res.status(500).send('Error occured on saving user');
+				} else {
+					newUser.authToken = '';
+					res.json(newUser);
+				}
+			});
 		} else {
 			let newUser = new User();
 			let newSeries = new Series();
@@ -31,13 +40,14 @@ router.post('/', (req, res) => {
 
 			newUser.save((err, newUser) => {
 				if(err) {
-					res.send(err);
+					res.status(500).send('Error occured on saving user');
 				} else {
 					newSeries._id = newUser._id;
 					newSeries.save((err, newSeries) => {
 						if(err) {
-							res.send(err);
+							res.status(500).send('Error occured on saving new series');
 						} else {
+							newUser.authToken = '';
 							res.json(newUser);
 						}
 					});
