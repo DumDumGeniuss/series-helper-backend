@@ -7,6 +7,9 @@ const router = express.Router();
 router.get('/:id', (req, res) => {
 	User.findById(req.params.id, (err, user) => {
 		if(err) {
+			res.status(500).send('Error occured on querying series');
+		}
+		if(!user) {
 			res.status(404).send('No user Found');
 		} else {
 			user.authToken = '';

@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/:id', (req, res) => {
 	Series.findById(req.params.id, (err, series) => {
 		if(err) {
-			res.status(500).send('Error occured on saving series');
+			res.status(500).send('Error occured on querying series');
 		} else {
 			res.json(series);
 		}
@@ -35,7 +35,10 @@ router.get('/:id', (req, res) => {
 router.post('/:id', (req, res) => {
 	const authToken = req.headers['auth-token'];
 	Series.findById(req.params.id, (err, series) => {
-		if (err) {
+		if(err) {
+			res.status(500).send('Error occured on saving series');
+		}
+		if (!series) {
 			res.status(404).send('No Series Found');
 		}
 		
