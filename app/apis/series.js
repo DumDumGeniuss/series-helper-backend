@@ -1,6 +1,7 @@
 import express from 'express';
 import Series from '../models/series.js';
 import User from '../models/user.js';
+import * as fb from './fb.js';
 
 const router = express.Router();
 
@@ -13,23 +14,6 @@ router.get('/:id', (req, res) => {
 		}
 	});
 });
-
-// router.post('/', (req, res) => {
-// 	let newSeries = new Series();
-// 	let data = req.body;
-
-// 	for(var key in data) {
-// 		newSeries[key] = data[key];
-// 	}
-
-// 	newSeries.save((err, newSeries) => {
-// 		if(err) {
-// 			res.send(err);
-// 		} else {
-// 			res.json(newSeries);
-// 		}
-// 	});
-// });
 
 
 router.post('/:id', (req, res) => {
@@ -44,23 +28,23 @@ router.post('/:id', (req, res) => {
 		
 		let data = req.body;
 
-		User.findById(data._id, (err, user) => {
-			if(authToken !== user.authToken) {
-				res.status(401).send('You are not authorized');
-			} else {
-				for(var key in data) {
-					series[key] = data[key];
-				}
-				series.save((err, series) => {
-					if(err) {
-						res.status(500).send('Error occured on saving series');
-					} else {
-						res.json(series);
+		fb.getFbUser(authToken)
+			.then((fbData) => {
+				if(fbData.id !== series._id) {
+					res.status(401).send('You are not authorized');
+				} else {
+					for(var key in data) {
+						series[key] = data[key];
 					}
-				});
-			}
-
-		});
+					series.save((err, series) => {
+						if(err) {
+							res.status(500).send('Error occured on saving series');
+						} else {
+							res.json(series);
+						}
+					});
+				}
+			})
 	});
 });
 

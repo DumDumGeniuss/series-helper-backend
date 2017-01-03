@@ -29,7 +29,6 @@ router.post('/auth', (req, res) => {
 				if(err) {
 					res.status(500).send('Error occured on saving user');
 				} else {
-					newUser.authToken = '';
 					res.json(newUser);
 				}
 			});
@@ -50,7 +49,6 @@ router.post('/auth', (req, res) => {
 						if(err) {
 							res.status(500).send('Error occured on saving new series');
 						} else {
-							newUser.authToken = '';
 							res.json(newUser);
 						}
 					});
