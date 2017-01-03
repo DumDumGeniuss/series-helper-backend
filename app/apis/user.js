@@ -12,7 +12,6 @@ router.get('/:id', (req, res) => {
 		if(!user) {
 			res.status(404).send('No user Found');
 		} else {
-			user.authToken = '';
 			res.json(user);
 		}
 	});
