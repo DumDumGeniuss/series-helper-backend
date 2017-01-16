@@ -16,6 +16,11 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
+	// const allowedOrigins = [process.env.ALLOWED_DOMAIN, 'http://localhost:3000']
+	// const origin = req.headers.origin;
+	// if (allowedOrigins.indexOf(origin) > -1) {
+	// 	res.setHeader('Access-Control-Allow-Origin', origin);
+	// }
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE');
 	res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Accept,Auth-Token');

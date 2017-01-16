@@ -1,0 +1,9 @@
+version: '2'
+services:
+  web:
+    build: .
+    command: npm run start:prod
+    ports:
+     - "9000:9000"
+    environment:
+      MONGO_DB_URL: "172.20.10.2:27017/series_helper"
